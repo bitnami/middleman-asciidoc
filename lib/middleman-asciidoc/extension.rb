@@ -19,7 +19,10 @@ module Middleman
         # QUESTION should base_dir be equal to docdir instead?
         app.config[:asciidoc][:base_dir] = app.source_dir
         app.config[:asciidoc][:attributes].concat(Array(options[:asciidoc_attributes]))
-        app.config[:asciidoc][:attributes] << %(imagesdir=#{File.join((app.config[:http_prefix] || '/').chomp('/'), app.config[:images_dir])})
+        # set imagesdir unless already defined
+        unless app.config[:asciidoc][:attributes].find{|e| e =~ /imagesdir=.*/}.any?
+          app.config[:asciidoc][:attributes] << %(imagesdir=#{File.join((app.config[:http_prefix] || '/').chomp('/'), app.config[:images_dir])})
+        end
       end
 
       def manipulate_resource_list(resources)
